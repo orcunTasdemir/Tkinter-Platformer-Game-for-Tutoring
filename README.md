@@ -1,2 +1,2 @@
 #Platformer Game with Python Tkinter
-![My Image](imgageSS.PNG)
+![My Image](imageSS.PNG)
