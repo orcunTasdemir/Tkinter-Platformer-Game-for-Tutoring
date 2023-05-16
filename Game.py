@@ -11,6 +11,7 @@ class Game:
         
         self.tk = Tk()
         self.scale = 4
+        self.gravity = 1.6
         self.tk.title("Platformer Game")
         #so the screen is not resizable 0 means "False"
         self.tk.resizable(0,0)
@@ -29,13 +30,13 @@ class Game:
         self.running = True
         
     def mainloop(self):
-        while 1:
-            if self.running:
+        while True:
+            if self.running == True:
                 for sprite in self.sprites:
                     sprite.move()
-                self.tk.update_idletasks()
-                self.tk.update()
-                time.sleep(0.01)
+            self.tk.update_idletasks()
+            self.tk.update()
+            time.sleep(0.01)
         
 #initiate the game here
 g = Game()
@@ -46,6 +47,8 @@ platforms = [
 ,PlatformSprite(g, "long", 200, 500)
 ,PlatformSprite(g, "short", 500, 400)
 ,PlatformSprite(g, "medium", 800, 700)
+,PlatformSprite(g, "medium", 600, 630)
+
 ]
 
 #add a door at the top as the objective of the game (exact math to put door on the right edge of a long platform)
