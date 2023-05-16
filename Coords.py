@@ -40,7 +40,7 @@ def collided_top(co1, co2):
 def collided_bottom(y, co1, co2):
     if within_x(co1, co2):
         y_calc = co1.y2 + y
-        if y_calc >= co2.y1 and y_calc <= co2.y2 + 24:
+        if y_calc >= co2.y1 and y_calc <= co2.y2 + 12:
             return True
     return False
 

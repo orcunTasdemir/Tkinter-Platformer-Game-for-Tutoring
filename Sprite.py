@@ -38,28 +38,33 @@ class DoorSprite(Sprite):
         self.imageCoords = self.game.canvas.create_image(x, y, image=self.imageSelect, anchor='nw')
         self.coordinates = Coords(x, y, x + self.imageSelect.width(), y + self.imageSelect.height())
         
+    def animate(self):
+        self.game.canvas.itemconfig(self.imageCoords, image = self.images["door_open"])
+        
 class CharacterSprite(Sprite):
-    def __init__(self, game, imageName, x, y, facingLeft):
+    def __init__(self, game, x, y, facingLeft):
         Sprite.__init__(self, game)
         self.facingLeft = facingLeft
-        self.images_right = {
-            "first" : ImageTk.PhotoImage(resize_sprites(game.scale, "assets/character/characterSprites_first_stance.png")),
-            "second" : ImageTk.PhotoImage(resize_sprites(game.scale, "assets/character/characterSprites_second_stance.png")),
-            "third" : ImageTk.PhotoImage(resize_sprites(game.scale, "assets/character/characterSprites_third_stance.png"))
-        }
-        self.images_left = {
-            "first" : ImageTk.PhotoImage(mirror_sprite(resize_sprites(game.scale, "assets/character/characterSprites_first_stance.png"))),
-            "second" : ImageTk.PhotoImage(mirror_sprite(resize_sprites(game.scale, "assets/character/characterSprites_second_stance.png"))),
-            "third" : ImageTk.PhotoImage(mirror_sprite(resize_sprites(game.scale, "assets/character/characterSprites_third_stance.png")))
-        }
-        self.imageSelect = self.images_left[imageName] if facingLeft else self.images_right[imageName]
+        self.images_right = [
+            ImageTk.PhotoImage(resize_sprites(game.scale, "assets/character/characterSprites_first_stance.png")),
+            ImageTk.PhotoImage(resize_sprites(game.scale, "assets/character/characterSprites_second_stance.png")),
+            ImageTk.PhotoImage(resize_sprites(game.scale, "assets/character/characterSprites_third_stance.png"))
+        ]
+        self.images_left = [
+            ImageTk.PhotoImage(mirror_sprite(resize_sprites(game.scale, "assets/character/characterSprites_first_stance.png"))),
+            ImageTk.PhotoImage(mirror_sprite(resize_sprites(game.scale, "assets/character/characterSprites_second_stance.png"))),
+            ImageTk.PhotoImage(mirror_sprite(resize_sprites(game.scale, "assets/character/characterSprites_third_stance.png")))
+        ]
+        self.imageSelect = self.images_left[1] if facingLeft else self.images_right[1]
         self.imageCoords = self.game.canvas.create_image(x, y, image=self.imageSelect, anchor='nw')
+        self.imageIdx = 1
+        
         self.coordinates = Coords(x, y, x + self.imageSelect.width(), y + self.imageSelect.height())
         self.x = 0
         self.y = 0
         self.terminal = 70
         self.speed = 20
-        self.jump_v = -25
+        self.jump_v = -45
         self.direction = "stop"
         self.jump_count = 0
         self.jump_duration = 12
@@ -91,13 +96,31 @@ class CharacterSprite(Sprite):
             self.y = self.jump_v
         
     def animate(self):
-        pass
+        if self.x < 0:
+            self.facingLeft = True
+        elif self.x > 0:
+            self.facingLeft = False
+        if self.x != 0 and self.y == 0:
+            if time.time() - self.last_time > 0.1:
+                self.last_time = time.time()
+                self.imageIdx = (self.imageIdx + 1) % 2
+        if self.facingLeft:
+            if self.x < 0:
+                self.game.canvas.itemconfig(self.imageCoords, image = self.images_left[self.imageIdx])
+            else:
+                self.game.canvas.itemconfig(self.imageCoords, image = self.images_left[1])
+
+        elif not self.facingLeft:
+            if self.x > 0:
+                self.game.canvas.itemconfig(self.imageCoords, image = self.images_right[self.imageIdx])
+            else:
+                self.game.canvas.itemconfig(self.imageCoords, image = self.images_right[1])
+
+            
         
     def move(self):
         self.getDirection()
-        #animate when x is not 0
-        if self.x != 0:
-            self.animate()
+        self.animate()
         self.y += (self.game.gravity * self.game.gravity)
         co = self.coords()
         top = True
@@ -139,11 +162,13 @@ class CharacterSprite(Sprite):
                 self.x = 0
                 left = False
                 if sprite.endgame:
+                    sprite.animate()
                     self.game.running = False
             if right and self.x > 0 and collided_right(co, sprite_co):
                 self.x = 0
                 right = False
                 if sprite.endgame:
+                    sprite.animate()
                     self.game.running = False
         # for when we are not on the bottom not already falling but there are no collisions
         if falling and bottom and self.y == 0 and co.y2 < self.game.canvas_height:
