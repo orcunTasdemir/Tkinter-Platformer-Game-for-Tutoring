@@ -39,14 +39,13 @@ class Game:
         
 #initiate the game here
 g = Game()
-
 #add some platforms to the game
 platforms = [
     PlatformSprite(g, "long", 700, 100)
 ,PlatformSprite(g, "short", 150, 200)
 ,PlatformSprite(g, "long", 200, 500)
 ,PlatformSprite(g, "short", 500, 400)
-,PlatformSprite(g, "medium", 800, 600)
+,PlatformSprite(g, "medium", 800, 700)
 ]
 
 #add a door at the top as the objective of the game (exact math to put door on the right edge of a long platform)
