@@ -1,5 +1,6 @@
 from PIL import Image
-
+import os
+import sys
 
 def resize_background(canvas_w, canvas_h, imageURL):
     image = Image.open(imageURL)   
@@ -16,4 +17,11 @@ def resize_sprites(factor, imageURL):
 
 def mirror_sprite(image):
     return image.transpose(method=Image.FLIP_LEFT_RIGHT)
+
+
+def getAbsPath(filename):
+    exe_dir = os.path.dirname(sys.argv[0])
+    assets_dir = os.path.join(exe_dir, "assets")
+    asset_path = os.path.join(assets_dir, filename)
+    return asset_path
     

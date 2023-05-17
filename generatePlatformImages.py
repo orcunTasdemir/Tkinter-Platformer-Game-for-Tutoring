@@ -1,6 +1,7 @@
 from PIL import Image
+from ResizeImage import *
 
-imageURL = r"assets/gameElements/platforms/platforms.png"
+imageURL = getAbsPath("gameElements/platforms/platforms.png")
 im = Image.open(imageURL)
 longPlatform = im.crop((0, 0, 52, 6))
 idx = imageURL.index(".png")

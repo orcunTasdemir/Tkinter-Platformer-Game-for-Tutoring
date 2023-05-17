@@ -23,17 +23,17 @@ class PlatformSprite(Sprite):
         self.images = {
             "short": ImageTk.PhotoImage(
                 resize_sprites(
-                    game.scale, "assets/gameElements/platforms/platforms_short.png"
+                    game.scale, getAbsPath("gameElements/platforms/platforms_short.png")
                 )
             ),
             "medium": ImageTk.PhotoImage(
                 resize_sprites(
-                    game.scale, "assets/gameElements/platforms/platforms_medium.png"
+                    game.scale, getAbsPath("gameElements/platforms/platforms_medium.png")
                 )
             ),
             "long": ImageTk.PhotoImage(
                 resize_sprites(
-                    game.scale, "assets/gameElements/platforms/platforms_long.png"
+                    game.scale, getAbsPath("gameElements/platforms/platforms_long.png")
                 )
             ),
         }
@@ -53,10 +53,10 @@ class DoorSprite(Sprite):
         self.isClosed = isClosed
         self.images = {
             "door_open": ImageTk.PhotoImage(
-                resize_sprites(game.scale, "assets/gameElements/doors/doors_open.png")
+                resize_sprites(game.scale, getAbsPath("gameElements/doors/doors_open.png"))
             ),
             "door_closed": ImageTk.PhotoImage(
-                resize_sprites(game.scale, "assets/gameElements/doors/doors_closed.png")
+                resize_sprites(game.scale,getAbsPath( "gameElements/doors/doors_closed.png"))
             ),
         }
 
@@ -79,17 +79,17 @@ class CharacterSprite(Sprite):
         self.images_right = [
             ImageTk.PhotoImage(
                 resize_sprites(
-                    game.scale, "assets/character/characterSprites_first_stance.png"
+                    game.scale, getAbsPath("character/characterSprites_first_stance.png")
                 )
             ),
             ImageTk.PhotoImage(
                 resize_sprites(
-                    game.scale, "assets/character/characterSprites_second_stance.png"
+                    game.scale, getAbsPath("character/characterSprites_second_stance.png")
                 )
             ),
             ImageTk.PhotoImage(
                 resize_sprites(
-                    game.scale, "assets/character/characterSprites_third_stance.png"
+                    game.scale, getAbsPath("character/characterSprites_third_stance.png")
                 )
             ),
         ]
@@ -97,7 +97,7 @@ class CharacterSprite(Sprite):
             ImageTk.PhotoImage(
                 mirror_sprite(
                     resize_sprites(
-                        game.scale, "assets/character/characterSprites_first_stance.png"
+                        game.scale, getAbsPath("character/characterSprites_first_stance.png")
                     )
                 )
             ),
@@ -105,14 +105,14 @@ class CharacterSprite(Sprite):
                 mirror_sprite(
                     resize_sprites(
                         game.scale,
-                        "assets/character/characterSprites_second_stance.png",
+                        getAbsPath("character/characterSprites_second_stance.png"),
                     )
                 )
             ),
             ImageTk.PhotoImage(
                 mirror_sprite(
                     resize_sprites(
-                        game.scale, "assets/character/characterSprites_third_stance.png"
+                        game.scale, getAbsPath("character/characterSprites_third_stance.png")
                     )
                 )
             ),
@@ -128,7 +128,7 @@ class CharacterSprite(Sprite):
         )
         self.x = 0
         self.y = 0
-        self.terminal = 70
+        self.terminal = 30
         self.speed = 20
         self.jump_v = -30
         self.direction = "stop"
@@ -166,26 +166,32 @@ class CharacterSprite(Sprite):
         elif self.x > 0:
             self.facingLeft = False
         if self.x != 0 and self.y == 0:
-            if time.time() - self.last_time > 0.1:
+            if time.time() - self.last_time > 0.05:
                 self.last_time = time.time()
                 self.imageIdx = (self.imageIdx + 1) % 2
         if self.facingLeft:
-            if self.x < 0:
-                self.game.canvas.itemconfig(
-                    self.imageCoords, image=self.images_left[self.imageIdx]
-                )
+            if self.y != 0:
+                self.game.canvas.itemconfig(self.imageCoords, image=self.images_left[0])
             else:
-                self.game.canvas.itemconfig(self.imageCoords, image=self.images_left[1])
+                if self.x < 0:
+                    self.game.canvas.itemconfig(
+                        self.imageCoords, image=self.images_left[self.imageIdx]
+                    )
+                else:
+                    self.game.canvas.itemconfig(self.imageCoords, image=self.images_left[1])
 
         elif not self.facingLeft:
-            if self.x > 0:
-                self.game.canvas.itemconfig(
-                    self.imageCoords, image=self.images_right[self.imageIdx]
-                )
+            if self.y != 0:
+                self.game.canvas.itemconfig(self.imageCoords, image=self.images_right[0])
             else:
-                self.game.canvas.itemconfig(
-                    self.imageCoords, image=self.images_right[1]
-                )
+                if self.x > 0:
+                    self.game.canvas.itemconfig(
+                        self.imageCoords, image=self.images_right[self.imageIdx]
+                    )
+                else:
+                    self.game.canvas.itemconfig(
+                        self.imageCoords, image=self.images_right[1]
+                    )
 
     def move(self):
         self.getDirection()

@@ -1,6 +1,7 @@
 from PIL import Image
+from ResizeImage import *
 
-imageURL = r"assets/character/characterSprites.png"
+imageURL = (getAbsPath("character/characterSprites.png"))
 im = Image.open(imageURL)
 firstStance = im.crop((0, 0, 10, 16))
 idx = imageURL.index(".png")

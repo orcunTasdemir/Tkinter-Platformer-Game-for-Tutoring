@@ -5,6 +5,9 @@ import time
 from ResizeImage import *
 import Coords
 from Sprite import *
+import os
+import sys
+
 
 
 class Game:
@@ -26,11 +29,12 @@ class Game:
         )
         self.canvas.pack()
         self.tk.update()
+        ab = getAbsPath("gameElements/backgrounds/background.png")
         self.bg = ImageTk.PhotoImage(
             resize_background(
                 self.canvas_width,
                 self.canvas_height,
-                "assets/gameElements/backgrounds/background.png",
+                ab
             )
         )
         bg_w = self.bg.width()
@@ -83,3 +87,5 @@ g.sprites.append(door)
 g.sprites.append(character)
 
 g.mainloop()
+
+input("Continue...")

@@ -1,6 +1,7 @@
 from PIL import Image
+from ResizeImage import *
 
-imageURL = r"assets/gameElements/doors/doors.png"
+imageURL = getAbsPath("gameElements/doors/doors.png")
 im = Image.open(imageURL)
 closedDoor = im.crop((0, 0, 13, 23))
 idx = imageURL.index(".png")
